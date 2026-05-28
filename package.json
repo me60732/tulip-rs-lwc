@@ -1,6 +1,6 @@
 {
   "name": "tulip-rs-lwc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TradingView Lightweight Charts plugin — tulip-rs technical indicators as reactive chart overlays and oscillators",
   "type": "module",
   "main": "index.js",
