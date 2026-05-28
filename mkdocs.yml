@@ -1,0 +1,55 @@
+site_name: tulip-rs-lwc
+site_description: TradingView Lightweight Charts v5 plugin — 70+ tulip-rs technical indicators as overlays and oscillators with O(1) streaming
+site_url: https://me60732.github.io/tulip-rs-lwc
+repo_url: https://github.com/me60732/tulip-rs-lwc
+repo_name: me60732/tulip-rs-lwc
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Integration Guide: integration.md
+  - Overlays: overlays.md
+  - Oscillators: oscillators.md
+  - Candlestick Patterns: candlestick_patterns.md
+  - Streaming: streaming.md
+  - API Reference: api_reference.md
+  - Indicators: indicators.md
+
+docs_dir: docs
