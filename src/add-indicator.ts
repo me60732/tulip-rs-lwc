@@ -8,19 +8,37 @@
  *   - OscillatorHandle  (LineSeries / HistogramSeries in a dedicated pane)
  *     for all other indicators
  */
-import type { IChartApi, ISeriesApi, SeriesOptionsMap } from 'lightweight-charts';
-import * as ti from 'tulip-rs-wasm';
-import type { Indicator } from 'tulip-rs-wasm';
-import { OverlayPrimitive } from './overlays/overlay-primitive.js';
-import { OscillatorHandle } from './oscillators/oscillator-handle.js';
-import { getPaneManager } from './pane-manager.js';
-import { SERIES_COLORS, DEFAULT_LINE_WIDTH } from './constants.js';
-import type { AddIndicatorOptions, IndicatorHandle, OhlcvBar } from './types.js';
+import type {
+  IChartApi,
+  ISeriesApi,
+  SeriesOptionsMap,
+} from "lightweight-charts";
+import * as ti from "tulip-rs-wasm";
+import type { Indicator } from "tulip-rs-wasm";
+import { OverlayPrimitive } from "./overlays/overlay-primitive.js";
+import { HorizontalPrimitive } from "./overlays/horizontal-primitive.js";
+import { OscillatorHandle } from "./oscillators/oscillator-handle.js";
+import { getPaneManager } from "./pane-manager.js";
+import {
+  SERIES_COLORS,
+  DEFAULT_LINE_WIDTH,
+  DOT_RENDER_INDICATORS,
+  DEFAULT_DOT_RADIUS,
+  PSAR_UP_COLOR,
+  PSAR_DOWN_COLOR,
+  HORIZONTAL_LINE_INDICATORS,
+  PIVOT_POINT_COLORS,
+} from "./constants.js";
+import type {
+  AddIndicatorOptions,
+  IndicatorHandle,
+  OhlcvBar,
+} from "./types.js";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function isOverlay(displayType: string): boolean {
-  return displayType.toLowerCase() === 'overlay';
+  return displayType.toLowerCase() === "overlay";
 }
 
 // ── addIndicator ──────────────────────────────────────────────────────────────
@@ -68,38 +86,89 @@ function isOverlay(displayType: string): boolean {
  * ```
  */
 export function addIndicator(
-  chart:        IChartApi,
+  chart: IChartApi,
   sourceSeries: ISeriesApi<keyof SeriesOptionsMap>,
-  name:         string,
-  data:         OhlcvBar[],
-  options:      number[],
-  addOptions:   AddIndicatorOptions = {},
+  name: string,
+  data: OhlcvBar[],
+  options: number[],
+  addOptions: AddIndicatorOptions = {},
 ): IndicatorHandle {
-  if (name === 'candlestick') {
+  if (name === "candlestick") {
     throw new Error(
-      'tulip-rs-lwc: the candlestick indicator returns pattern objects, not numeric series, ' +
-      'and is not supported by addIndicator().',
+      "tulip-rs-lwc: the candlestick indicator returns pattern objects, not numeric series, " +
+        "and is not supported by addIndicator().",
     );
   }
 
-  const indicator = (ti as unknown as Record<string, Indicator | undefined>)[name];
+  const indicator = (ti as unknown as Record<string, Indicator | undefined>)[
+    name
+  ];
   if (!indicator) {
-    throw new Error(`tulip-rs-lwc: unknown indicator "${name}". ` +
-      'Check the spelling — names are lower-case (e.g. "sma", "rsi", "bbands").');
+    throw new Error(
+      `tulip-rs-lwc: unknown indicator "${name}". ` +
+        'Check the spelling — names are lower-case (e.g. "sma", "rsi", "bbands").',
+    );
   }
 
-  const info      = indicator.info;
-  const colors    = addOptions.colors    ?? [...SERIES_COLORS];
+  const info = indicator.info;
+  const colors = addOptions.colors ?? [...SERIES_COLORS];
   const lineWidth = addOptions.lineWidth ?? DEFAULT_LINE_WIDTH;
+
+  // ── Horizontal price levels (e.g. Pivot Point) ────────────────────────────
+  // Must be checked before the generic overlay path since pivitpoint is also
+  // classified as DisplayType::Overlay in the Rust metadata.
+  if (HORIZONTAL_LINE_INDICATORS.has(name)) {
+    const levelColors = addOptions.colors ?? [...PIVOT_POINT_COLORS];
+    const labels = [...info.outputs];
+    const primitive = new HorizontalPrimitive(
+      indicator,
+      data,
+      options,
+      levelColors,
+      labels,
+    );
+    sourceSeries.attachPrimitive(primitive);
+    return {
+      remove() {
+        sourceSeries.detachPrimitive(primitive);
+      },
+      setData(newData: OhlcvBar[]) {
+        primitive.setData(newData);
+      },
+      appendBar(bar: OhlcvBar) {
+        primitive.appendBar(bar);
+      },
+    };
+  }
 
   // ── Overlay ────────────────────────────────────────────────────────────────
   if (isOverlay(info.displayType)) {
+    const renderStyle =
+      addOptions.renderStyle ??
+      (DOT_RENDER_INDICATORS.has(name) ? "dots" : "line");
+    const dotRadius = addOptions.dotRadius ?? DEFAULT_DOT_RADIUS;
+    // For dot-style overlays that use directional colouring (e.g. PSAR),
+    // auto-apply green/red based on whether the value is above or below the
+    // bar's close price.  The caller can override via `upColor`/`downColor`.
+    const useDynColor =
+      DOT_RENDER_INDICATORS.has(name) && renderStyle === "dots";
+    const upColor = useDynColor
+      ? (addOptions.upColor ?? PSAR_UP_COLOR)
+      : (addOptions.upColor ?? null);
+    const downColor = useDynColor
+      ? (addOptions.downColor ?? PSAR_DOWN_COLOR)
+      : (addOptions.downColor ?? null);
     const primitive = new OverlayPrimitive(
       indicator,
       data,
       options,
       colors,
       addOptions.fillBand ?? false,
+      addOptions.optionalOutputMask ?? null,
+      renderStyle,
+      dotRadius,
+      upColor,
+      downColor,
     );
 
     sourceSeries.attachPrimitive(primitive);
@@ -119,16 +188,18 @@ export function addIndicator(
 
   // ── Oscillator ─────────────────────────────────────────────────────────────
   const paneManager = getPaneManager(chart);
-  const paneIndex   = addOptions.paneIndex ?? paneManager.allocate();
+  const paneIndex = addOptions.paneIndex ?? paneManager.allocate();
 
   const handle = new OscillatorHandle(
     chart,
+    sourceSeries,
     indicator,
     data,
     options,
     paneIndex,
     colors,
     lineWidth,
+    addOptions.optionalOutputMask ?? null,
   );
 
   return {

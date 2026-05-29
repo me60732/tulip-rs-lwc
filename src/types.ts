@@ -72,6 +72,45 @@ export type AddIndicatorOptions = {
 
   /** Line width in pixels for all line series.  Default: `1`. */
   lineWidth?: number;
+
+  /**
+   * Boolean mask enabling optional outputs (e.g. component EMAs/SMAs).
+   * `optionalOutputMask[i] = true` requests the i-th optional output listed in
+   * `indicator.info.optionalOutputs`.  Enabled outputs are rendered as
+   * additional `LineSeries` in the same pane alongside the primary output(s).
+   * Default: `undefined` (no optional outputs).
+   */
+  optionalOutputMask?: boolean[];
+
+  /**
+   * How to render an overlay indicator's output series.
+   * - `'line'` (default) — connect data points with a continuous line.
+   * - `'dots'`           — render each data point as an isolated filled circle.
+   *                        Used automatically for PSAR and similar indicators.
+   */
+  renderStyle?: "line" | "dots";
+
+  /**
+   * Colour for dots when SAR is **below** price (uptrend).
+   * Only used when `renderStyle` is `'dots'` and `downColor` is also set.
+   * When both are provided, each dot is coloured per-point based on
+   * whether the indicator value is above or below the bar's close price.
+   * Defaults to {@link PSAR_UP_COLOR} (`#4CAF50`) for PSAR.
+   */
+  upColor?: string;
+
+  /**
+   * Colour for dots when SAR is **above** price (downtrend).
+   * Only used when `renderStyle` is `'dots'` and `upColor` is also set.
+   * Defaults to {@link PSAR_DOWN_COLOR} (`#ef5350`) for PSAR.
+   */
+  downColor?: string;
+
+  /**
+   * Radius in CSS pixels of the dots when `renderStyle` is `'dots'`.
+   * Default: {@link DEFAULT_DOT_RADIUS} (3 px).
+   */
+  dotRadius?: number;
 };
 
 // ── Candlestick pattern types ───────────────────────────────────────────────

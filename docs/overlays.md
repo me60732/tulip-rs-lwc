@@ -19,10 +19,9 @@ When you add an overlay indicator, tulip-rs-lwc creates an `OverlayPrimitive` an
 
 | Category | Indicators |
 |---|---|
-| **Trend** | SMA, EMA, DEMA, TEMA, WMA, HMA, KAMA, TRIMA, ZLEMA, WILDERS, VIDYA, LINREG, TSF |
+| **Trend** | SMA, EMA, DEMA, TEMA, WMA, HMA, KAMA, TRIMA, ZLEMA, WILDERS, VIDYA, LINREG, TSF, PSAR |
 | **Price** | AVGPRICE, MEDPRICE, TYPPRICE, WCPRICE |
 | **Volatility** | BBANDS |
-| **Directional** | PSAR |
 | **Statistical** | MAX, MIN |
 
 The indicator type is determined by the `displayType` field returned by `indicator.info` — tulip-rs-lwc routes automatically; you do not specify it.
@@ -77,7 +76,7 @@ The fill is drawn behind the candlesticks at 10% opacity, so the candles remain 
 
 ### Parabolic SAR (PSAR)
 
-PSAR is rendered as a single scatter of dots on the price chart. Since PSAR returns a single output series it works exactly like SMA — a line through the stop points (which appear as a dotted line at the turning points):
+PSAR is rendered as a **scatter of dots** on the price chart — each bar gets an isolated filled circle placed at the stop-and-reverse level, with no connecting line between them. Dots appear below price bars during an uptrend and above during a downtrend, creating a clear visual gap at every trend reversal:
 
 ```ts
 const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
@@ -86,6 +85,15 @@ const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
 ```
 
 Options: `[accel_start, accel_max]` — standard default is `[0.02, 0.2]`.
+
+The dot size defaults to 3 px radius. Override it with `dotRadius`:
+
+```ts
+const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
+  colors:    ['#9C27B0'],
+  dotRadius: 4,
+});
+```
 
 ---
 

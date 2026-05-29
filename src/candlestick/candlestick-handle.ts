@@ -4,15 +4,18 @@
  * Renders tulip-rs candlestick pattern detections as Lightweight Charts v5
  * series markers via the `createSeriesMarkers()` plugin API.
  *
- * Each pattern found at a bar is placed as a marker:
+ * Each pattern found at a bar is placed as a marker at the DETECTION bar:
  *
  *   BullishReversal  → arrowUp   below the bar  (green by default)
  *   BearishReversal  → arrowDown above the bar  (red by default)
  *   Continuation     → circle    above the bar  (orange by default)
  *   Unknown          → square    above the bar  (grey by default)
  *
- * The pattern short-name (e.g. "hammer", "doji") is shown as the marker
- * text annotation when `showText` is true (default).
+ * Arrows carry NO text annotation — instead, hovering any bar that belongs
+ * to a detected pattern's span triggers a semi-transparent highlight rect
+ * and a floating tooltip (via PatternHighlightPrimitive).
+ *
+ * Pattern span = from `detectionBar - (pattern.bars - 1)` to `detectionBar`.
  *
  * Streaming:
  *   - Initial compute:  `candlestick.indicator()` — full history, stores State
@@ -34,6 +37,10 @@ import {
 } from "lightweight-charts";
 import * as ti from "tulip-rs-wasm";
 import type { OhlcvBar, AddCandlestickPatternOptions } from "../types.js";
+import {
+  PatternHighlightPrimitive,
+  type PatternEntry,
+} from "./pattern-highlight-primitive.js";
 
 // ── Wasm types ────────────────────────────────────────────────────────────────
 
@@ -137,6 +144,7 @@ function forecastStyle(
 // ── CandlestickPatternHandle ──────────────────────────────────────────────────
 
 export class CandlestickPatternHandle {
+  private readonly _series: ISeriesApi<keyof SeriesOptionsMap>;
   private readonly _plugin: ISeriesMarkersPluginApi<Time>;
   private readonly _api: CandlestickIndicatorApi;
   private readonly _filter: string | undefined;
@@ -147,11 +155,13 @@ export class CandlestickPatternHandle {
     continuation: string;
     unknown: string;
   };
+  private readonly _highlightPrimitive: PatternHighlightPrimitive;
 
   private _data: OhlcvBar[];
   private _cpOpts: number[];
   private _state: CandlestickWasmState | null = null;
   private _markers: SeriesMarkerBar<Time>[] = [];
+  private _entries: PatternEntry[] = [];
 
   constructor(
     series: ISeriesApi<keyof SeriesOptionsMap>,
@@ -159,10 +169,11 @@ export class CandlestickPatternHandle {
     cpOptions: number[],
     addOpts: AddCandlestickPatternOptions,
   ) {
+    this._series = series;
     this._data = [...data];
     this._cpOpts = cpOptions;
     this._filter = addOpts.filter;
-    this._showText = addOpts.showText ?? true;
+    this._showText = addOpts.showText ?? false;
     this._colors = {
       bullish: addOpts.bullishColor ?? DEFAULT_BULLISH_COLOR,
       bearish: addOpts.bearishColor ?? DEFAULT_BEARISH_COLOR,
@@ -178,15 +189,21 @@ export class CandlestickPatternHandle {
     // This is the correct way to place markers in LWC v5 — not series.setMarkers().
     this._plugin = createSeriesMarkers(series);
 
+    // Create and attach the hover-highlight primitive.
+    this._highlightPrimitive = new PatternHighlightPrimitive();
+    series.attachPrimitive(this._highlightPrimitive);
+
     this._computeFull();
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
 
-  /** Remove all markers and detach the plugin from the series. */
+  /** Remove all markers and detach the plugin and highlight primitive from the series. */
   remove(): void {
     this._markers = [];
+    this._entries = [];
     this._plugin.detach();
+    this._series.detachPrimitive(this._highlightPrimitive);
   }
 
   setData(data: OhlcvBar[]): void {
@@ -220,33 +237,76 @@ export class CandlestickPatternHandle {
     const patterns = batchResult[0];
 
     if (patterns && patterns.length > 0) {
+      const detectionIdx = this._data.length - 1; // the bar we just pushed
+      const newEntries = [...this._entries];
       for (const p of patterns) {
-        this._markers.push(this._makeMarker(bar.time, p));
+        this._markers.push(this._makeMarker(detectionIdx, p));
+        newEntries.push(this._buildEntry(detectionIdx, p));
       }
-      // _markers is kept in chronological order by appending — setMarkers
-      // requires ascending-time order, which is always satisfied here.
+      this._entries = newEntries;
       this._plugin.setMarkers(this._markers);
+      this._highlightPrimitive.updatePatterns(this._entries, this._data);
     }
   }
 
   // ── Internal ──────────────────────────────────────────────────────────────
 
+  /** Map a forecast string to the configured CSS colour. */
+  private _forecastColor(forecast: string): string {
+    switch (forecast) {
+      case "BullishReversal":
+        return this._colors.bullish;
+      case "BearishReversal":
+        return this._colors.bearish;
+      case "Continuation":
+        return this._colors.continuation;
+      default:
+        return this._colors.unknown;
+    }
+  }
+
+  /**
+   * Build a PatternEntry for the hover-highlight primitive.
+   * Covers bars from `startIdx` (= detectionIdx - bars + 1) to `detectionIdx`.
+   */
+  private _buildEntry(
+    detectionIdx: number,
+    pattern: CandlestickPatternResult,
+  ): PatternEntry {
+    const startIdx = Math.max(0, detectionIdx - (pattern.bars - 1));
+    return {
+      startIdx,
+      endIdx: detectionIdx,
+      startTime: this._data[startIdx].time,
+      endTime: this._data[detectionIdx].time,
+      fullName: pattern.fullName,
+      japaneseName: pattern.japaneseName,
+      forecast: pattern.forecast,
+      color: this._forecastColor(pattern.forecast),
+    };
+  }
+
+  /**
+   * Build a marker for a detected pattern.
+   * The arrow is placed at the DETECTION bar (last bar of the pattern).
+   * No text is attached — the tooltip is shown by PatternHighlightPrimitive.
+   *
+   * @param detectionIdx - index into `this._data` for the *last* bar of the pattern.
+   * @param pattern       - pattern result from wasm.
+   */
   private _makeMarker(
-    time: Time,
+    detectionIdx: number,
     pattern: CandlestickPatternResult,
   ): SeriesMarkerBar<Time> {
     const style = forecastStyle(pattern.forecast, this._colors);
-    const marker: SeriesMarkerBar<Time> = {
-      time,
+    return {
+      time: this._data[detectionIdx].time,
       position: style.position,
       shape: style.shape,
       color: style.color,
       size: 1,
+      // No text — tooltip shown by PatternHighlightPrimitive on hover
     };
-    if (this._showText) {
-      marker.text = pattern.name;
-    }
-    return marker;
   }
 
   private _computeFull(): void {
@@ -263,6 +323,7 @@ export class CandlestickPatternHandle {
 
     this._state = state;
     this._markers = [];
+    this._entries = [];
 
     // result.length === data.length - lookback
     // result[i] corresponds to data[lookback + i]
@@ -270,12 +331,16 @@ export class CandlestickPatternHandle {
 
     result.forEach((patterns, i) => {
       if (!patterns || patterns.length === 0) return;
-      const { time } = this._data[lookback + i];
+      const detectionIdx = lookback + i;
       for (const p of patterns) {
-        this._markers.push(this._makeMarker(time, p));
+        // Markers are placed at detection bars, which are already in
+        // chronological order — no sort needed.
+        this._markers.push(this._makeMarker(detectionIdx, p));
+        this._entries.push(this._buildEntry(detectionIdx, p));
       }
     });
 
     this._plugin.setMarkers(this._markers);
+    this._highlightPrimitive.updatePatterns(this._entries, this._data);
   }
 }
