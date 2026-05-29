@@ -116,10 +116,14 @@ Returns an `IndicatorHandle`:
 
 ```ts
 type AddIndicatorOptions = {
-  colors?:    string[];  // CSS colors, one per output series
-  fillBand?:  boolean;   // shade area between first/last output (BBands, etc.)
-  lineWidth?: number;    // line width in px (default: 1)
-  paneIndex?: number;    // force a specific pane for oscillators
+  colors?:      string[];           // CSS colors, one per output series
+  fillBand?:    boolean;            // shade area between first/last output (BBands, etc.)
+  lineWidth?:   number;             // line width in px (default: 1)
+  paneIndex?:   number;             // force a specific pane for oscillators
+  renderStyle?: 'line' | 'dots';   // connected line or isolated dot scatter (default: 'line')
+  dotRadius?:   number;             // dot radius in px — dots mode only (default: 3)
+  upColor?:     string;             // dot colour when SAR is below price — PSAR uptrend
+  downColor?:   string;             // dot colour when SAR is above price — PSAR downtrend
 };
 ```
 
@@ -155,9 +159,13 @@ type AddCandlestickPatternOptions = {
 
 ## How It Works
 
-### Overlays (SMA, EMA, BBands, PSAR, …)
+### Overlays (SMA, EMA, BBands, PSAR, Pivot Points, …)
 
 Implemented as `ISeriesPrimitive<Time>` attached to the candlestick series. Lines are drawn in front of candlesticks via `draw()`; band fills are drawn behind via `drawBackground()`. `autoscaleInfo()` extends the Y-axis only when indicator values fall outside the current price range — the candlestick view is never collapsed.
+
+**PSAR** uses `renderStyle: 'dots'` automatically — each bar is drawn as an isolated filled circle coloured green (`upColor`) when SAR is below the close price (uptrend) and red (`downColor`) when above (downtrend). No connecting line is drawn.
+
+**Pivot Points** (`pivotpoint`) are rendered as full-width dashed horizontal lines across the price pane via `HorizontalPrimitive`, one per level (S3 → R3), with a labelled pill at the right edge. They do not open an oscillator pane.
 
 ### Oscillators (RSI, MACD, Stoch, CCI, …)
 
@@ -182,11 +190,12 @@ All 70+ tulip-rs scalar indicators are supported via `addIndicator()`. Candlesti
 | **Trend (Overlay)** | SMA, EMA, DEMA, TEMA, WMA, HMA, KAMA, TRIMA, ZLEMA, WILDERS, VIDYA, LINREG, TSF, PSAR |
 | **Volatility (Overlay)** | BBANDS |
 | **Price (Overlay)** | AVGPRICE, MEDPRICE, TYPPRICE, WCPRICE |
-| **Momentum (Oscillator)** | RSI, CMO, MOM, ROC, ROCR, STOCHRSI, DPO, FOSC, MACD, APO, PPO, STOCH |
-| **Volatility (Oscillator)** | ATR, NATR, VOLATILITY, STDDEV, MD |
+| **Momentum (Oscillator)** | RSI, CMO, MOM, ROC, ROCR, STOCHRSI, DPO, FOSC, MACD, APO, PPO, STOCH, TRIX |
+| **Volatility (Oscillator)** | ATR, NATR, VOLATILITY, STDDEV, MD, TR |
 | **Volume (Oscillator)** | OBV, AD, ADOSC, MFI, EMV, NVI, PVI, KVO, VWMA, VOSC |
 | **Directional** | ADX, ADXR, DI, DM, DX, AROON, AROONOSC |
-| **Other** | AO, BOP, CCI, CVI, FISHER, MASS, MARKETFI, MSW, QSTICK, TR, VHF, WAD, WILLR, PIVOTPOINT, ULTOSC |
+| **Other** | AO, BOP, CCI, CVI, FISHER, MASS, MARKETFI, MSW, QSTICK, VHF, WAD, WILLR, ULTOSC |
+| **Price Pane — Horizontal Lines** | PIVOTPOINT (S3, S2, S1, PP, R1, R2, R3 as full-width dashed lines) |
 | **Candlestick Patterns** | 77+ patterns via `addCandlestickPatterns()` — filter by BullishReversal, BearishReversal, BullishContinuation, BearishContinuation, and more |
 
 ---
