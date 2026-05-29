@@ -43,6 +43,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Live Demo: demo.md
   - Getting Started: getting_started.md
   - Integration Guide: integration.md
   - Overlays: overlays.md
