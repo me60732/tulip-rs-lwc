@@ -69,9 +69,32 @@ addIndicator(chart, candles, 'bbands', ohlcv, [20, 2]);      // period, stddev m
 addIndicator(chart, candles, 'macd',   ohlcv, [12, 26, 9]);  // fast, slow, signal
 addIndicator(chart, candles, 'rsi',    ohlcv, [14]);         // period
 addIndicator(chart, candles, 'psar',   ohlcv, [0.02, 0.2]);  // accel_start, accel_max
+addIndicator(chart, candles, 'pivotpoint', ohlcv, []);        // no options — horizontal line rendering
 ```
 
 See the [Indicators](indicators.md) table for the options each indicator accepts.
+
+### `addOptions`
+
+Key visual fields in `AddIndicatorOptions`:
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `colors` | `string[]` | palette | One CSS colour per output series |
+| `fillBand` | `boolean` | `false` | Shade area between first and last output |
+| `lineWidth` | `number` | `1` | Line width in pixels (oscillator series only) |
+| `paneIndex` | `number` | auto | Force a specific pane for oscillators |
+| `renderStyle` | `'line' \| 'dots'` | `'line'` | Connected line or isolated dots |
+| `dotRadius` | `number` | `3` | Dot radius in pixels (dots mode only) |
+| `upColor` | `string` | `'#26a69a'` | Dot colour when in uptrend (PSAR) |
+| `downColor` | `string` | `'#ef5350'` | Dot colour when in downtrend (PSAR) |
+
+Two indicators use special rendering automatically — no options needed:
+
+- **`psar`** — always renders as coloured dots (`upColor`/`downColor`); `colors` is ignored.
+- **`pivotpoint`** — renders as full-width dashed horizontal lines on the price pane; it does **not** open an oscillator pane despite its non-overlay `displayType`.
+
+See [API Reference — AddIndicatorOptions](api_reference.md#addindicatoroptions) for full documentation.
 
 ---
 

@@ -27,6 +27,8 @@ Pass the **Name** (lower-case) to `addIndicator()`. Options are positional — p
 | `tsf` | Time Series Forecast | close | period | tsf |
 | `psar` | Parabolic SAR | high, low | accel\_start, accel\_max | psar |
 
+² **PSAR** renders as per-point coloured dots (`upColor` when SAR is below price, `downColor` when above) rather than a connected line. See [Overlays — Parabolic SAR](overlays.md#parabolic-sar-psar).
+
 ---
 
 ## Volatility — Overlay
@@ -137,8 +139,10 @@ Pass the **Name** (lower-case) to `addIndicator()`. Options are positional — p
 | `vhf` | Vertical Horizontal Filter | close | period | vhf |
 | `wad` | Williams Accumulation/Distribution | high, low, close | _(none)_ | wad |
 | `willr` | Williams %R | high, low, close | period | willr |
-| `pivotpoint` | Pivot Points | high, low, close | _(none)_ | pivot, r1, r2, s1, s2 |
+| `pivotpoint` | Pivot Points | high, low, close | _(none)_ | s3, s2, s1, pp, r1, r2, r3 ¹ |
 | `ultosc` | Ultimate Oscillator | high, low, close | short\_period, medium\_period, long\_period | ultosc |
+
+¹ **PIVOTPOINT** renders as full-width dashed horizontal lines on the price pane via `HorizontalPrimitive` — not as an oscillator series — despite its non-overlay `displayType`. The seven output levels (`s3, s2, s1, pp, r1, r2, r3`) are packed into a single array that the plugin unpacks automatically. See [Overlays — Pivot Points](overlays.md#pivot-points-pivotpoint).
 
 ---
 

@@ -76,6 +76,9 @@ const bb = addIndicator(chart, candles, 'bbands', ohlcv, [20, 2], {
 | **Indicators** | 70+ tulip-rs scalar indicators |
 | **Overlay rendering** | `ISeriesPrimitive` canvas drawing — no Y-axis distortion |
 | **Band fills** | Semi-transparent fill between first and last output |
+| **Dot rendering** | Per-bar dot scatter with per-point `upColor`/`downColor` colouring (PSAR) |
+| **Horizontal lines** | Full-width dashed price-level lines with pill labels (Pivot Points) |
+| **No last-value clutter** | Price lines and last-value labels suppressed on all indicator series |
 | **Oscillator panes** | Automatic pane allocation and release |
 | **MACD histogram** | Auto-detected by output name, rendered as `HistogramSeries` |
 | **Streaming** | O(1) `appendBar()` via `state.batchIndicator()` |

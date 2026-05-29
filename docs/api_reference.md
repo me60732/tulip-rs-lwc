@@ -141,10 +141,14 @@ Optional configuration passed as the sixth argument to `addIndicator()`. All fie
 
 ```ts
 type AddIndicatorOptions = {
-  colors?:    string[];
-  fillBand?:  boolean;
-  lineWidth?: number;
-  paneIndex?: number;
+  colors?:      string[];
+  fillBand?:    boolean;
+  lineWidth?:   number;
+  paneIndex?:   number;
+  renderStyle?: 'line' | 'dots';
+  dotRadius?:   number;
+  upColor?:     string;
+  downColor?:   string;
 };
 ```
 
@@ -208,6 +212,65 @@ const stochrsi = addIndicator(chart, candles, 'stochrsi', ohlcv, [14], {
   colors:    ['#FF9800'],
 });
 ```
+
+### `renderStyle`
+
+`'line' | 'dots'` — choose between a connected line and a scatter of isolated dots for overlay primitives. Default: `'line'`.
+
+Set to `'dots'` for indicators where discrete per-bar points are more meaningful than a connected curve. PSAR selects `'dots'` automatically — you do not need to set this unless you want dot rendering for another overlay.
+
+```ts
+// Explicit dots rendering on any overlay
+const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
+  renderStyle: 'dots',
+});
+```
+
+### `dotRadius`
+
+`number` — radius of each dot in pixels when `renderStyle` is `'dots'`. Default: `3`.
+
+```ts
+const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
+  dotRadius: 5,
+});
+```
+
+### `upColor`
+
+`string` — CSS colour for dots or lines rendered during an **uptrend** (SAR below price). Used by PSAR for per-point green/red colouring. Accepts any valid CSS colour.
+
+Default: `'#26a69a'` (green).
+
+```ts
+const psar = addIndicator(chart, candles, 'psar', ohlcv, [0.02, 0.2], {
+  upColor:   '#4CAF50',
+  downColor: '#ef5350',
+});
+```
+
+### `downColor`
+
+`string` — CSS colour for dots or lines rendered during a **downtrend** (SAR above price). Default: `'#ef5350'` (red).
+
+Used together with `upColor` — see the example above.
+
+---
+
+## Rendering Behaviour Notes
+
+### Auto-selected rendering modes
+
+Two indicator whitelists override the default line rendering automatically — you do not need to set `renderStyle` or any special option:
+
+| Whitelist | Indicators | Effect |
+|---|---|---|
+| `DOT_RENDER_INDICATORS` | `psar` | Renders as isolated dots with `upColor`/`downColor` per-point colouring |
+| `HORIZONTAL_LINE_INDICATORS` | `pivotpoint` | Renders as full-width dashed horizontal lines across the price pane with labelled pills |
+
+### Last-value lines
+
+Indicator series (overlay primitives and oscillator series) have `priceLineVisible: false` and `lastValueVisible: false` set by default. This means the floating dashed horizontal line that Lightweight Charts normally draws at the last data point is suppressed for indicator outputs — keeping the chart uncluttered when multiple indicators are active.
 
 ---
 

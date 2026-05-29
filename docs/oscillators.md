@@ -27,7 +27,10 @@ The **pane manager** allocates pane indices sequentially starting at pane 1 (pan
 | **Volatility** | ATR, NATR, VOLATILITY, STDDEV, MD, TR |
 | **Volume** | OBV, AD, ADOSC, MFI, EMV, NVI, PVI, KVO, VWMA, VOSC |
 | **Directional** | ADX, ADXR, DI, DM, DX, AROON, AROONOSC |
-| **Other** | AO, BOP, CCI, CVI, FISHER, MASS, MARKETFI, MSW, QSTICK, VHF, WAD, WILLR, PIVOTPOINT, ULTOSC |
+| **Other** | AO, BOP, CCI, CVI, FISHER, MASS, MARKETFI, MSW, QSTICK, VHF, WAD, WILLR, ULTOSC |
+
+!!! note "PIVOTPOINT renders on the price pane, not as an oscillator"
+    Although `pivotpoint` has a non-overlay `displayType`, it is rendered as full-width dashed horizontal lines directly on the price pane via `HorizontalPrimitive` — not in a separate oscillator pane. It is listed under [Overlays](overlays.md#pivot-points-pivotpoint) rather than here.
 
 ---
 
