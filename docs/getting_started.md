@@ -56,7 +56,7 @@ All three packages are available from jsDelivr as ES modules:
 ```
 
 !!! note "CDN and WASM"
-    When using a CDN or any setup where the WASM file is not bundled alongside the JS, you must pass the full URL of the `.wasm` binary to `init()`. See [Integration Guide — CDN Setup](integration.md#cdn--plain-html) for details.
+    When using a CDN or any setup where the WASM file is not bundled alongside the JS, you must pass the full URL of the `.wasm` binary to `init()`. See [Integration Guide — CDN Setup](integration.md#cdn-plain-html) for details.
 
 ---
 
