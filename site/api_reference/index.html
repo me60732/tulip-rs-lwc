@@ -1,0 +1,1632 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="TradingView Lightweight Charts v5 plugin — 70+ tulip-rs technical indicators as overlays and oscillators with O(1) streaming">
+      
+      
+      
+        <link rel="canonical" href="https://me60732.github.io/tulip-rs-lwc/api_reference/">
+      
+      
+        <link rel="prev" href="../streaming/">
+      
+      
+        <link rel="next" href="../indicators/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>API Reference - tulip-rs-lwc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="tulip-rs-lwc" class="md-header__button md-logo" aria-label="tulip-rs-lwc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            tulip-rs-lwc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/me60732/tulip-rs-lwc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    me60732/tulip-rs-lwc
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../demo/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Live Demo
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting_started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../integration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../overlays/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overlays
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../oscillators/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Oscillators
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../candlestick_patterns/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Candlestick Patterns
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../streaming/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Streaming
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../indicators/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Indicators
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="tulip-rs-lwc" class="md-nav__button md-logo" aria-label="tulip-rs-lwc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    tulip-rs-lwc
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/me60732/tulip-rs-lwc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    me60732/tulip-rs-lwc
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overlays/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overlays
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oscillators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Oscillators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../candlestick_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Candlestick Patterns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initwasmurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        init(wasmUrl?)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addindicatorchart-sourceseries-name-data-options-addoptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addIndicator(chart, sourceSeries, name, data, options, addOptions?)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indicatorhandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IndicatorHandle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IndicatorHandle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .remove()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdatadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .setData(data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appendbarbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .appendBar(bar)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addindicatoroptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddIndicatorOptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AddIndicatorOptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fillband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fillBand
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linewidth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lineWidth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paneindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        paneIndex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderstyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        renderStyle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dotradius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotRadius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upcolor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        upColor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downcolor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        downColor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rendering-behaviour-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering Behaviour Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rendering Behaviour Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-selected-rendering-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-selected rendering modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#last-value-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last-value lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ohlcvbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OhlcvBar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../indicators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Indicators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initwasmurl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        init(wasmUrl?)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addindicatorchart-sourceseries-name-data-options-addoptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        addIndicator(chart, sourceSeries, name, data, options, addOptions?)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indicatorhandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IndicatorHandle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IndicatorHandle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .remove()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdatadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .setData(data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appendbarbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .appendBar(bar)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addindicatoroptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddIndicatorOptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AddIndicatorOptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fillband" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fillBand
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linewidth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lineWidth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paneindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        paneIndex
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderstyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        renderStyle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dotradius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotRadius
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upcolor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        upColor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#downcolor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        downColor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rendering-behaviour-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering Behaviour Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rendering Behaviour Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-selected-rendering-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-selected rendering modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#last-value-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last-value lines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ohlcvbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OhlcvBar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="initwasmurl"><code>init(wasmUrl?)</code><a class="headerlink" href="#initwasmurl" title="Permanent link">&para;</a></h2>
+<p>Re-exported from <code>tulip-rs-wasm</code>. Initialises the WASM module. Must be called <strong>once</strong> before any <code>addIndicator()</code> calls.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">init</span><span class="p">(</span><span class="nx">wasmUrl?</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">URL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Request</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wasmUrl</code></td>
+<td><code>string \| URL \| Request \| undefined</code></td>
+<td>URL of the <code>.wasm</code> binary. Omit when using a bundler (Vite, webpack) — the asset is resolved automatically. Required when loading from a CDN or serving files without a bundler.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>Promise&lt;void&gt;</code> — resolves when the WASM module is ready.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Bundler — no URL needed</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">await</span><span class="w"> </span><span class="nx">init</span><span class="p">();</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// CDN</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">await</span><span class="w"> </span><span class="nx">init</span><span class="p">(</span><span class="s1">&#39;https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/pkg/tulip_rs_wasm_bg.wasm&#39;</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h2 id="addindicatorchart-sourceseries-name-data-options-addoptions"><code>addIndicator(chart, sourceSeries, name, data, options, addOptions?)</code><a class="headerlink" href="#addindicatorchart-sourceseries-name-data-options-addoptions" title="Permanent link">&para;</a></h2>
+<p>Add a tulip-rs technical indicator to a Lightweight Charts v5 chart. Routes automatically to an overlay primitive or an oscillator pane based on the indicator's <code>displayType</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">chart</span><span class="o">:</span><span class="w">        </span><span class="kt">IChartApi</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">sourceSeries</span><span class="o">:</span><span class="w"> </span><span class="kt">ISeriesApi</span><span class="o">&lt;</span><span class="nx">keyof</span><span class="w"> </span><span class="nx">SeriesOptionsMap</span><span class="o">&gt;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w">         </span><span class="kt">string</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w">         </span><span class="kt">OhlcvBar</span><span class="p">[],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">options</span><span class="o">:</span><span class="w">      </span><span class="kt">number</span><span class="p">[],</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nx">addOptions?</span><span class="o">:</span><span class="w">  </span><span class="kt">AddIndicatorOptions</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">IndicatorHandle</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chart</code></td>
+<td><code>IChartApi</code></td>
+<td>The LWC chart instance (return value of <code>createChart()</code>).</td>
+</tr>
+<tr>
+<td><code>sourceSeries</code></td>
+<td><code>ISeriesApi&lt;...&gt;</code></td>
+<td>The primary price series. Overlay primitives attach to this series; its price scale is used for Y-axis coordinate conversion.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td>Lower-case indicator name, e.g. <code>'sma'</code>, <code>'rsi'</code>, <code>'bbands'</code>. See <a href="../indicators/">Indicators</a> for the full list.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><code>OhlcvBar[]</code></td>
+<td>Full OHLCV dataset. The <code>volume</code> field is required for volume-based indicators (AD, OBV, MFI, KVO, ADOSC, EMV, NVI, PVI, VWMA, VOSC).</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><code>number[]</code></td>
+<td>Numeric indicator parameters in the order the indicator expects (e.g. <code>[14]</code> for RSI period, <code>[20, 2]</code> for BBands period and stddev).</td>
+</tr>
+<tr>
+<td><code>addOptions</code></td>
+<td><code>AddIndicatorOptions</code></td>
+<td>Visual and pane configuration. All fields are optional.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <a href="#indicatorhandle"><code>IndicatorHandle</code></a></p>
+<p><strong>Throws:</strong>
+- If <code>name</code> is <code>'candlestick'</code> — the candlestick pattern indicator returns objects, not numeric series, and is not supported.
+- If <code>name</code> is unknown — an informative error with the indicator name is thrown.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Overlay</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sma&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">]);</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// Overlay with options</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bbands&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nx">colors</span><span class="o">:</span><span class="w">   </span><span class="p">[</span><span class="s1">&#39;#ef5350&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;#2196F3&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;#ef5350&#39;</span><span class="p">],</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nx">fillBand</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">});</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">// Oscillator</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="kd">const</span><span class="w"> </span><span class="nx">rsi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rsi&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">14</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nx">colors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;#9C27B0&#39;</span><span class="p">],</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">});</span>
+</code></pre></div>
+<hr />
+<h2 id="indicatorhandle"><code>IndicatorHandle</code><a class="headerlink" href="#indicatorhandle" title="Permanent link">&para;</a></h2>
+<p>Returned by every <code>addIndicator()</code> call. Use it to update data or remove the indicator.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">IndicatorHandle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">remove</span><span class="p">()</span><span class="o">:</span><span class="w">          </span><span class="ow">void</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nx">setData</span><span class="p">(</span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">OhlcvBar</span><span class="p">[])</span><span class="o">:</span><span class="w"> </span><span class="ow">void</span><span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">appendBar</span><span class="p">(</span><span class="nx">bar</span><span class="o">:</span><span class="w"> </span><span class="kt">OhlcvBar</span><span class="p">)</span><span class="o">:</span><span class="w">  </span><span class="ow">void</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">};</span>
+</code></pre></div>
+<h3 id="remove"><code>.remove()</code><a class="headerlink" href="#remove" title="Permanent link">&para;</a></h3>
+<p>Remove the indicator from the chart and free all associated resources.</p>
+<ul>
+<li><strong>Overlays:</strong> detaches the <code>ISeriesPrimitive</code> from the source series.</li>
+<li><strong>Oscillators:</strong> removes all <code>LineSeries</code> / <code>HistogramSeries</code> from the chart; releases the allocated pane (unless you specified a custom <code>paneIndex</code> in <code>AddIndicatorOptions</code>).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sma&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">]);</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nx">sma</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="setdatadata"><code>.setData(data)</code><a class="headerlink" href="#setdatadata" title="Permanent link">&para;</a></h3>
+<p>Replace the full dataset and recompute the indicator from scratch. The indicator remains on the same pane / primitive — only the underlying data and state are reset.</p>
+<p>Use this when the user changes the symbol or timeframe:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sma&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">]);</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">onSymbolChange</span><span class="p">(</span><span class="nx">newOhlcv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nx">candles</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="nx">newOhlcv</span><span class="p">);</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nx">sma</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="nx">newOhlcv</span><span class="p">);</span><span class="w">  </span><span class="c1">// recomputes on the new dataset</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="appendbarbar"><code>.appendBar(bar)</code><a class="headerlink" href="#appendbarbar" title="Permanent link">&para;</a></h3>
+<p>Append one new bar and update the indicator <strong>incrementally</strong> using the stored <code>State</code> object. O(1) per call — does not reprocess history.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sma&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">]);</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nx">candles</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nx">sma</span><span class="p">.</span><span class="nx">appendBar</span><span class="p">(</span><span class="nx">bar</span><span class="p">);</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">};</span>
+</code></pre></div>
+<p>During the warmup period (i.e. before the indicator has accumulated enough bars to produce output), <code>appendBar()</code> feeds the bar to the internal state but draws nothing. Once warmup is complete, each call produces one new chart point.</p>
+<hr />
+<h2 id="addindicatoroptions"><code>AddIndicatorOptions</code><a class="headerlink" href="#addindicatoroptions" title="Permanent link">&para;</a></h2>
+<p>Optional configuration passed as the sixth argument to <code>addIndicator()</code>. All fields are optional.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">AddIndicatorOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">colors?</span><span class="o">:</span><span class="w">      </span><span class="kt">string</span><span class="p">[];</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">fillBand?</span><span class="o">:</span><span class="w">    </span><span class="kt">boolean</span><span class="p">;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">lineWidth?</span><span class="o">:</span><span class="w">   </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">paneIndex?</span><span class="o">:</span><span class="w">   </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">renderStyle</span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;line&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;dots&#39;</span><span class="p">;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nx">dotRadius?</span><span class="o">:</span><span class="w">   </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nx">upColor?</span><span class="o">:</span><span class="w">     </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nx">downColor?</span><span class="o">:</span><span class="w">   </span><span class="kt">string</span><span class="p">;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">};</span>
+</code></pre></div>
+<h3 id="colors"><code>colors</code><a class="headerlink" href="#colors" title="Permanent link">&para;</a></h3>
+<p>One CSS colour string per output series. Accepts any valid CSS colour — hex, <code>rgb()</code>, <code>rgba()</code>, named colours.</p>
+<p>If fewer colours are provided than there are output series, the remaining series cycle through the built-in default palette:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[&#39;#2196F3&#39;, &#39;#ef5350&#39;, &#39;#4CAF50&#39;, &#39;#FF9800&#39;, &#39;#9C27B0&#39;, &#39;#00BCD4&#39;, &#39;#FF5722&#39;, &#39;#607D8B&#39;]
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Single output</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">{</span><span class="w"> </span><span class="nx">colors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;#FFD700&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">// Multi-output (BBands)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">{</span><span class="w"> </span><span class="nx">colors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;#ef5350&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;#2196F3&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;#ef5350&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">// Semi-transparent</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">{</span><span class="w"> </span><span class="nx">colors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;rgba(33, 150, 243, 0.7)&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h3 id="fillband"><code>fillBand</code><a class="headerlink" href="#fillband" title="Permanent link">&para;</a></h3>
+<p><code>boolean</code> — shade the area between the <strong>first</strong> and <strong>last</strong> output series with a semi-transparent fill. Drawn behind candlesticks.</p>
+<p>Intended for band-style indicators (Bollinger Bands, Donchian Channels, etc.). Default: <code>false</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bbands&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">fillBand</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="linewidth"><code>lineWidth</code><a class="headerlink" href="#linewidth" title="Permanent link">&para;</a></h3>
+<p><code>number</code> — line width in pixels for <code>LineSeries</code> outputs. Default: <code>1</code>.</p>
+<p>Has no effect on overlay primitives (which always use <code>lineWidth = 1</code> on the canvas) or on <code>HistogramSeries</code> outputs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sma&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">20</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nx">lineWidth</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="paneindex"><code>paneIndex</code><a class="headerlink" href="#paneindex" title="Permanent link">&para;</a></h3>
+<p><code>number</code> — force the oscillator into a specific pane instead of allocating the next free pane automatically. Has no effect on overlay indicators.</p>
+<p>When you specify <code>paneIndex</code>, the pane is <strong>not</strong> released when <code>remove()</code> is called — pane lifecycle becomes your responsibility.</p>
+<p>Use this to place two oscillators in the same pane:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">rsi</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rsi&#39;</span><span class="p">,</span><span class="w">      </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">14</span><span class="p">]);</span><span class="w">    </span><span class="c1">// auto → pane 1</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">stochrsi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stochrsi&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">14</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nx">paneIndex</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span><span class="w">   </span><span class="c1">// share RSI&#39;s pane</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nx">colors</span><span class="o">:</span><span class="w">    </span><span class="p">[</span><span class="s1">&#39;#FF9800&#39;</span><span class="p">],</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="renderstyle"><code>renderStyle</code><a class="headerlink" href="#renderstyle" title="Permanent link">&para;</a></h3>
+<p><code>'line' | 'dots'</code> — choose between a connected line and a scatter of isolated dots for overlay primitives. Default: <code>'line'</code>.</p>
+<p>Set to <code>'dots'</code> for indicators where discrete per-bar points are more meaningful than a connected curve. PSAR selects <code>'dots'</code> automatically — you do not need to set this unless you want dot rendering for another overlay.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">// Explicit dots rendering on any overlay</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">psar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;psar&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">0.02</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nx">renderStyle</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;dots&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="dotradius"><code>dotRadius</code><a class="headerlink" href="#dotradius" title="Permanent link">&para;</a></h3>
+<p><code>number</code> — radius of each dot in pixels when <code>renderStyle</code> is <code>'dots'</code>. Default: <code>3</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">psar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;psar&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">0.02</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">dotRadius</span><span class="o">:</span><span class="w"> </span><span class="kt">5</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="upcolor"><code>upColor</code><a class="headerlink" href="#upcolor" title="Permanent link">&para;</a></h3>
+<p><code>string</code> — CSS colour for dots or lines rendered during an <strong>uptrend</strong> (SAR below price). Used by PSAR for per-point green/red colouring. Accepts any valid CSS colour.</p>
+<p>Default: <code>'#26a69a'</code> (green).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">psar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">addIndicator</span><span class="p">(</span><span class="nx">chart</span><span class="p">,</span><span class="w"> </span><span class="nx">candles</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;psar&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ohlcv</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">0.02</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nx">upColor</span><span class="o">:</span><span class="w">   </span><span class="s1">&#39;#4CAF50&#39;</span><span class="p">,</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nx">downColor</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#ef5350&#39;</span><span class="p">,</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="downcolor"><code>downColor</code><a class="headerlink" href="#downcolor" title="Permanent link">&para;</a></h3>
+<p><code>string</code> — CSS colour for dots or lines rendered during a <strong>downtrend</strong> (SAR above price). Default: <code>'#ef5350'</code> (red).</p>
+<p>Used together with <code>upColor</code> — see the example above.</p>
+<hr />
+<h2 id="rendering-behaviour-notes">Rendering Behaviour Notes<a class="headerlink" href="#rendering-behaviour-notes" title="Permanent link">&para;</a></h2>
+<h3 id="auto-selected-rendering-modes">Auto-selected rendering modes<a class="headerlink" href="#auto-selected-rendering-modes" title="Permanent link">&para;</a></h3>
+<p>Two indicator whitelists override the default line rendering automatically — you do not need to set <code>renderStyle</code> or any special option:</p>
+<table>
+<thead>
+<tr>
+<th>Whitelist</th>
+<th>Indicators</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DOT_RENDER_INDICATORS</code></td>
+<td><code>psar</code></td>
+<td>Renders as isolated dots with <code>upColor</code>/<code>downColor</code> per-point colouring</td>
+</tr>
+<tr>
+<td><code>HORIZONTAL_LINE_INDICATORS</code></td>
+<td><code>pivotpoint</code></td>
+<td>Renders as full-width dashed horizontal lines across the price pane with labelled pills</td>
+</tr>
+</tbody>
+</table>
+<h3 id="last-value-lines">Last-value lines<a class="headerlink" href="#last-value-lines" title="Permanent link">&para;</a></h3>
+<p>Indicator series (overlay primitives and oscillator series) have <code>priceLineVisible: false</code> and <code>lastValueVisible: false</code> set by default. This means the floating dashed horizontal line that Lightweight Charts normally draws at the last data point is suppressed for indicator outputs — keeping the chart uncluttered when multiple indicators are active.</p>
+<hr />
+<h2 id="ohlcvbar"><code>OhlcvBar</code><a class="headerlink" href="#ohlcvbar" title="Permanent link">&para;</a></h2>
+<p>The data type for OHLCV bars, used by <code>addIndicator()</code>, <code>setData()</code>, and <code>appendBar()</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">OhlcvBar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nx">time</span><span class="o">:</span><span class="w">    </span><span class="kt">Time</span><span class="p">;</span><span class="w">    </span><span class="c1">// LWC Time — string (&#39;2024-01-02&#39;), UTCTimestamp (number), or BusinessDay</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nx">open</span><span class="o">:</span><span class="w">    </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nx">high</span><span class="o">:</span><span class="w">    </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nx">low</span><span class="o">:</span><span class="w">     </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nx">close</span><span class="o">:</span><span class="w">   </span><span class="kt">number</span><span class="p">;</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nx">volume?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w">  </span><span class="c1">// required for volume-based indicators</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="p">};</span>
+</code></pre></div>
+<p><code>Time</code> is the Lightweight Charts time type — the same type you use with <code>series.setData()</code>. All three LWC time formats are supported: ISO date strings (<code>'2024-01-02'</code>), Unix timestamps in seconds, and <code>{ year, month, day }</code> objects.</p>
+<hr />
+<h2 id="exports">Exports<a class="headerlink" href="#exports" title="Permanent link">&para;</a></h2>
+<p>All public types and the two function exports are available from the package root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="nx">init</span><span class="p">,</span><span class="w">            </span><span class="c1">// function — initialise WASM</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="nx">addIndicator</span><span class="p">,</span><span class="w">    </span><span class="c1">// function — add an indicator</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;tulip-rs-lwc&#39;</span><span class="p">;</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span><span class="nx">OhlcvBar</span><span class="p">,</span><span class="w">             </span><span class="c1">// input bar type</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span><span class="nx">IndicatorHandle</span><span class="p">,</span><span class="w">      </span><span class="c1">// handle returned by addIndicator()</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span><span class="nx">AddIndicatorOptions</span><span class="p">,</span><span class="w">  </span><span class="c1">// visual/pane config</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;tulip-rs-lwc&#39;</span><span class="p">;</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.top", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
