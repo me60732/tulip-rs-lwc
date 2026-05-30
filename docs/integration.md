@@ -148,8 +148,8 @@ When loading from a CDN or serving files statically without a bundler, the WASM 
     "imports": {
       "lightweight-charts": "https://cdn.jsdelivr.net/npm/lightweight-charts@5/dist/lightweight-charts.standalone.development.js",
       "fancy-canvas":       "https://cdn.jsdelivr.net/npm/fancy-canvas@2/dist/fancy-canvas.module.js",
-      "tulip-rs-wasm":      "https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/index.js",
-      "tulip-rs-lwc":       "https://cdn.jsdelivr.net/npm/tulip-rs-lwc@0.1.0/index.js"
+      "tulip-rs-wasm":      "https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/index.js",
+      "tulip-rs-lwc":       "https://cdn.jsdelivr.net/npm/tulip-rs-lwc@0.1.11/index.js"
     }
   }
   </script>
@@ -160,7 +160,7 @@ When loading from a CDN or serving files statically without a bundler, the WASM 
     import { createChart, CandlestickSeries } from 'lightweight-charts';
     import { init, addIndicator } from 'tulip-rs-lwc';
 
-    const WASM_URL = 'https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/pkg/tulip_rs_wasm_bg.wasm';
+    const WASM_URL = 'https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/pkg/tulip_rs_wasm_bg.wasm';
 
     async function main() {
       await init(WASM_URL);

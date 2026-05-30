@@ -30,8 +30,8 @@ All three packages are available from jsDelivr as ES modules:
     "imports": {
       "lightweight-charts": "https://cdn.jsdelivr.net/npm/lightweight-charts@5/dist/lightweight-charts.standalone.development.js",
       "fancy-canvas":       "https://cdn.jsdelivr.net/npm/fancy-canvas@2/dist/fancy-canvas.module.js",
-      "tulip-rs-wasm":      "https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/index.js",
-      "tulip-rs-lwc":       "https://cdn.jsdelivr.net/npm/tulip-rs-lwc@0.1.0/index.js"
+      "tulip-rs-wasm":      "https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/index.js",
+      "tulip-rs-lwc":       "https://cdn.jsdelivr.net/npm/tulip-rs-lwc@0.1.11/index.js"
     }
   }
   </script>
@@ -43,7 +43,7 @@ All three packages are available from jsDelivr as ES modules:
     import { init, addIndicator } from 'tulip-rs-lwc';
 
     // When loading from CDN you must provide the WASM file URL explicitly
-    await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/pkg/tulip_rs_wasm_bg.wasm');
+    await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/pkg/tulip_rs_wasm_bg.wasm');
 
     const chart   = createChart(document.getElementById('chart'));
     const candles = chart.addSeries(CandlestickSeries);
@@ -79,7 +79,7 @@ All three packages are available from jsDelivr as ES modules:
     import { init, addIndicator } from 'tulip-rs-lwc';
 
     // Provide the WASM binary URL explicitly
-    await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/pkg/tulip_rs_wasm_bg.wasm');
+    await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/pkg/tulip_rs_wasm_bg.wasm');
     ```
 
 !!! warning "Call `init()` once"

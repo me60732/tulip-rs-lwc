@@ -23,7 +23,7 @@ function init(wasmUrl?: string | URL | Request): Promise<void>
 await init();
 
 // CDN
-await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.0/pkg/tulip_rs_wasm_bg.wasm');
+await init('https://cdn.jsdelivr.net/npm/tulip-rs-wasm@0.1.11/pkg/tulip_rs_wasm_bg.wasm');
 ```
 
 ---
