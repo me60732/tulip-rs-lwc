@@ -1,4 +1,4 @@
-import type { Time } from "lightweight-charts";
+import type { Time, ISeriesApi, SeriesOptionsMap } from "lightweight-charts";
 
 // ── Core data types ───────────────────────────────────────────────────────────
 
@@ -111,6 +111,14 @@ export type AddIndicatorOptions = {
    * Default: {@link DEFAULT_DOT_RADIUS} (3 px).
    */
   dotRadius?: number;
+
+  /**
+   * Volume series to attach to when the indicator (or one of its optional
+   * outputs) has `displayType === "Volume"`.  Required for rendering VOSC's
+   * optional short/long SMA lines as overlays on the volume bars panel.
+   * When omitted, Volume-type outputs are silently skipped.
+   */
+  volumeSeries?: ISeriesApi<keyof SeriesOptionsMap> | null;
 };
 
 // ── Candlestick pattern types ───────────────────────────────────────────────

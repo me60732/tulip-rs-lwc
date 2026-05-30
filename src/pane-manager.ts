@@ -1,46 +1,59 @@
-import type { IChartApi } from 'lightweight-charts';
+import type { IChartApi } from "lightweight-charts";
 
-// ── PaneManager ───────────────────────────────────────────────────────────────
+// ── PaneAllocator interface ──────────────────────────────────────────────────
+
+/**
+ * Minimal interface used by OscillatorHandle to allocate and release oscillator
+ * panes without depending on the concrete PaneManager class.
+ */
+export interface PaneAllocator {
+  allocate(): number;
+  release(pane: number): void;
+}
+
+// ── PaneManager ─────────────────────────────────────────────────────────
 
 /**
  * Tracks oscillator pane allocation for a single chart instance.
  *
- * - Pane 0 is always the price chart (candlesticks).
- * - Panes 1+ are allocated sequentially for oscillator indicators.
+ * Pane 0 is always the price chart (candlesticks). Panes 1+ are allocated
+ * for oscillator indicators.
  *
- * Multiple output series belonging to the same indicator occupy the same pane
- * and share a single allocation slot (the `OscillatorHandle` calls `allocate`
- * once and `release` once regardless of how many series it creates).
+ * Rather than maintaining an internal counter (which drifts out of sync with
+ * LWC after panes are removed), `allocate()` reads `chart.panes().length`
+ * directly. LWC auto-removes empty panes when all their series are deleted,
+ * so `chart.panes().length` always reflects reality. This guarantees that
+ * `moveToPane(allocate())` always lands at the correct next slot, and that
+ * two series calling `moveToPane` with the *same* allocated index share a
+ * pane rather than each creating a new one.
  */
-class PaneManager {
-  private _next = 1;
-  private _refCounts = new Map<number, number>();
+class PaneManager implements PaneAllocator {
+  private _chart: IChartApi;
 
-  /** Reserve the next free pane and return its index. */
-  allocate(): number {
-    const pane = this._next++;
-    this._refCounts.set(pane, 1);
-    return pane;
+  constructor(chart: IChartApi) {
+    this._chart = chart;
   }
 
   /**
-   * Release a pane.  If it was the topmost allocated pane, reclaim the slot
-   * so the next `allocate()` reuses it.
+   * Return the index of the next available pane.
+   * Calling `series.moveToPane()` with this value will create a new pane at
+   * that position. Subsequent calls with the *same* value move series into
+   * the pane that was just created.
    */
-  release(pane: number): void {
-    const remaining = (this._refCounts.get(pane) ?? 1) - 1;
-    if (remaining <= 0) {
-      this._refCounts.delete(pane);
-      if (pane === this._next - 1) {
-        this._next--;
-      }
-    } else {
-      this._refCounts.set(pane, remaining);
-    }
+  allocate(): number {
+    return this._chart.panes().length;
+  }
+
+  /**
+   * LWC automatically removes a pane when its last series is removed via
+   * `chart.removeSeries()`. No explicit release bookkeeping is needed.
+   */
+  release(_pane: number): void {
+    // no-op — LWC handles pane cleanup automatically
   }
 }
 
-// WeakMap keyed on the chart instance so the manager is GC'd automatically
+// WeakMap keyed on the chart instance so the manager is GC’d automatically
 // when the chart is destroyed.
 const _managers = new WeakMap<IChartApi, PaneManager>();
 
@@ -51,7 +64,7 @@ const _managers = new WeakMap<IChartApi, PaneManager>();
 export function getPaneManager(chart: IChartApi): PaneManager {
   let manager = _managers.get(chart);
   if (!manager) {
-    manager = new PaneManager();
+    manager = new PaneManager(chart);
     _managers.set(chart, manager);
   }
   return manager;

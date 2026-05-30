@@ -14,11 +14,13 @@ import type {
   SeriesOptionsMap,
 } from "lightweight-charts";
 import * as ti from "tulip-rs-wasm";
-import type { Indicator } from "tulip-rs-wasm";
+import type { Indicator, IndicatorInfo } from "tulip-rs-wasm";
 import { OverlayPrimitive } from "./overlays/overlay-primitive.js";
 import { HorizontalPrimitive } from "./overlays/horizontal-primitive.js";
 import { OscillatorHandle } from "./oscillators/oscillator-handle.js";
 import { getPaneManager } from "./pane-manager.js";
+import { getPricePaneLegend } from "./helpers/price-pane-legend.js";
+import type { LegendEntry } from "./helpers/price-pane-legend.js";
 import {
   SERIES_COLORS,
   DEFAULT_LINE_WIDTH,
@@ -37,8 +39,47 @@ import type {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function isOverlay(displayType: string): boolean {
-  return displayType.toLowerCase() === "overlay";
+/** Get the display type of the primary (first) output group. */
+function getPrimaryDisplayType(info: IndicatorInfo): string {
+  return info.displayGroups[0]?.displayType ?? "Indicator";
+}
+
+/**
+ * Build overlay legend entries from outputs + enabled optionals.
+ * For PSAR-style dynamic-color dot indicators, pass `upColor`/`downColor`
+ * to get a two-entry ▲/▼ legend instead of the default output-color list.
+ */
+function buildOverlayLegendEntries(
+  info: IndicatorInfo,
+  colors: string[],
+  optionalMask: boolean[] | null | undefined,
+  upColor: string | null,
+  downColor: string | null,
+): LegendEntry[] {
+  // Dot indicators with directional colouring (e.g. PSAR) — show ▲/▼ pair
+  if (upColor && downColor) {
+    return [
+      { name: `${info.outputs[0]} ▲`, color: upColor },
+      { name: `${info.outputs[0]} ▼`, color: downColor },
+    ];
+  }
+  // Standard: one entry per primary output, then each enabled optional
+  const entries: LegendEntry[] = info.outputs.map((name, i) => ({
+    name,
+    color: colors[i] ?? SERIES_COLORS[i % SERIES_COLORS.length],
+  }));
+  if (optionalMask) {
+    let ci = info.outputs.length;
+    optionalMask.forEach((enabled, i) => {
+      if (!enabled) return;
+      entries.push({
+        name: info.optionalOutputs[i],
+        color: colors[ci] ?? SERIES_COLORS[ci % SERIES_COLORS.length],
+      });
+      ci++;
+    });
+  }
+  return entries;
 }
 
 // ── addIndicator ──────────────────────────────────────────────────────────────
@@ -111,8 +152,16 @@ export function addIndicator(
   }
 
   const info = indicator.info;
+  const primaryDisplayType = getPrimaryDisplayType(info);
   const colors = addOptions.colors ?? [...SERIES_COLORS];
   const lineWidth = addOptions.lineWidth ?? DEFAULT_LINE_WIDTH;
+
+  // True when every display group is "Overlay" (e.g. SMA, EMA, BBands).
+  // Mixed-type indicators (e.g. VIDYA — Overlay primary but Indicator stddev
+  // groups) must go through OscillatorHandle so each group is routed correctly.
+  const isPureOverlay =
+    primaryDisplayType === "Overlay" &&
+    info.displayGroups.every((g) => g.displayType === "Overlay");
 
   // ── Horizontal price levels (e.g. Pivot Point) ────────────────────────────
   // Must be checked before the generic overlay path since pivitpoint is also
@@ -142,7 +191,7 @@ export function addIndicator(
   }
 
   // ── Overlay ────────────────────────────────────────────────────────────────
-  if (isOverlay(info.displayType)) {
+  if (isPureOverlay) {
     const renderStyle =
       addOptions.renderStyle ??
       (DOT_RENDER_INDICATORS.has(name) ? "dots" : "line");
@@ -173,9 +222,22 @@ export function addIndicator(
 
     sourceSeries.attachPrimitive(primitive);
 
+    const legendKey: object = {};
+    getPricePaneLegend(chart).add(
+      legendKey,
+      buildOverlayLegendEntries(
+        info,
+        colors,
+        addOptions.optionalOutputMask,
+        upColor,
+        downColor,
+      ),
+    );
+
     return {
       remove() {
         sourceSeries.detachPrimitive(primitive);
+        getPricePaneLegend(chart).remove(legendKey);
       },
       setData(newData: OhlcvBar[]) {
         primitive.setData(newData);
@@ -186,29 +248,65 @@ export function addIndicator(
     };
   }
 
-  // ── Oscillator ─────────────────────────────────────────────────────────────
-  const paneManager = getPaneManager(chart);
-  const paneIndex = addOptions.paneIndex ?? paneManager.allocate();
+  // ── Volume overlay ─────────────────────────────────────────────────────────
+  // For indicators whose primary display type is "Volume" (overlaid on the
+  // volume bars panel rather than the price chart or a separate pane).
+  // Currently no indicator has this as its primary type, but we handle it
+  // for future-proofing.
+  if (primaryDisplayType === "Volume") {
+    const volumeSeries = addOptions.volumeSeries ?? null;
+    if (!volumeSeries) {
+      console.warn(
+        `tulip-rs-lwc: "${name}" has primary display type "Volume" but ` +
+          `no volumeSeries was provided in addOptions — indicator skipped.`,
+      );
+      return { remove() {}, setData() {}, appendBar() {} };
+    }
+    const primitive = new OverlayPrimitive(
+      indicator,
+      data,
+      options,
+      colors,
+      addOptions.fillBand ?? false,
+      addOptions.optionalOutputMask ?? null,
+      "line",
+      DEFAULT_DOT_RADIUS,
+      null,
+      null,
+    );
+    volumeSeries.attachPrimitive(primitive);
+    return {
+      remove() {
+        volumeSeries.detachPrimitive(primitive);
+      },
+      setData(newData: OhlcvBar[]) {
+        primitive.setData(newData);
+      },
+      appendBar(bar: OhlcvBar) {
+        primitive.appendBar(bar);
+      },
+    };
+  }
 
+  // ── Oscillator ───────────────────────────────────────────────────────────────────
+  const paneManager = getPaneManager(chart);
   const handle = new OscillatorHandle(
     chart,
     sourceSeries,
     indicator,
     data,
     options,
-    paneIndex,
+    paneManager,
+    addOptions.paneIndex ?? null, // forcedPrimaryPaneIndex
     colors,
     lineWidth,
     addOptions.optionalOutputMask ?? null,
+    addOptions.volumeSeries ?? null,
   );
 
   return {
     remove() {
       handle.remove();
-      // Only release if we allocated the pane ourselves.
-      if (addOptions.paneIndex === undefined) {
-        paneManager.release(paneIndex);
-      }
     },
     setData(newData: OhlcvBar[]) {
       handle.setData(newData);
