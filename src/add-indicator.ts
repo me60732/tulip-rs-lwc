@@ -302,6 +302,7 @@ export function addIndicator(
     lineWidth,
     addOptions.optionalOutputMask ?? null,
     addOptions.volumeSeries ?? null,
+    addOptions.fillBand ?? false,
   );
 
   return {

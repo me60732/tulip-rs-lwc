@@ -29,11 +29,17 @@ import type { Indicator } from "tulip-rs-wasm";
 import { extractInputs } from "../helpers/input-extractor.js";
 import { SERIES_COLORS, DEFAULT_LINE_WIDTH } from "../constants.js";
 import { DataOverlayPrimitive } from "../overlays/data-overlay-primitive.js";
+import { FillBandPrimitive } from "../overlays/fill-band-primitive.js";
 import type { OhlcvBar, WasmState } from "../types.js";
 import type { PaneAllocator } from "../pane-manager.js";
 import { PaneLabelPrimitive } from "./pane-label-primitive.js";
 import type { LegendEntry } from "./pane-label-primitive.js";
 import { getPricePaneLegend } from "../helpers/price-pane-legend.js";
+import {
+  resolveOffset,
+  buildOffsetSeries,
+  buildPriceSeries,
+} from "../helpers/offset-resolver.js";
 
 // ── Internal render-group types ───────────────────────────────────────────────
 
@@ -53,6 +59,25 @@ type IndicatorRenderGroup = {
 /** One `Overlay`-type DisplayGroup: lines drawn on the price chart. */
 type OverlayRenderGroup = {
   outputIndices: number[];
+  offsetValue: number; // always 0 for entries in _overlayGroups
+  primitive: DataOverlayPrimitive;
+  legendKey: object;
+};
+
+/** One `Overlay`-type DisplayGroup with a non-zero time offset (e.g. Ichimoku leading spans).
+ *  Uses LineSeries on pane 0 so future timestamps extend the chart's time scale. */
+type OffsetOverlayRenderGroup = {
+  outputIndices: number[];
+  offsetValue: number;
+  seriesList: ISeriesApi<"Line">[];
+  fillPrimitive: FillBandPrimitive | null; // non-null when fillBand=true and >=2 outputs
+  legendKey: object;
+};
+
+/** One `Price`-type DisplayGroup: a price field from input data rendered on the price chart. */
+type PriceRenderGroup = {
+  priceField: "open" | "high" | "low" | "close";
+  offsetValue: number; // resolved bar shift (negative for lagging span)
   primitive: DataOverlayPrimitive;
   legendKey: object;
 };
@@ -85,7 +110,10 @@ export class OscillatorHandle {
 
   private _indicatorGroups: IndicatorRenderGroup[] = [];
   private _overlayGroups: OverlayRenderGroup[] = [];
+  private _offsetOverlayGroups: OffsetOverlayRenderGroup[] = [];
   private _volumeGroups: VolumeRenderGroup[] = [];
+  private _priceGroups: PriceRenderGroup[] = [];
+  private _fillBand: boolean;
 
   private _sourceSeries: ISeriesApi<keyof SeriesOptionsMap> | null = null;
   private _volumeSeries: ISeriesApi<keyof SeriesOptionsMap> | null = null;
@@ -107,6 +135,7 @@ export class OscillatorHandle {
     lineWidth: number,
     optionalMask: boolean[] | null = null,
     volumeSeries: ISeriesApi<keyof SeriesOptionsMap> | null = null,
+    fillBand = false,
   ) {
     this._chart = chart;
     this._sourceSeries = sourceSeries;
@@ -116,6 +145,7 @@ export class OscillatorHandle {
     this._paneAllocator = paneAllocator;
     this._optionalMask = optionalMask;
     this._volumeSeries = volumeSeries;
+    this._fillBand = fillBand;
 
     const info = indicator.info;
     const nPrimary = info.outputs.length;
@@ -162,6 +192,8 @@ export class OscillatorHandle {
       displayType: string;
       outputIndices: number[];
       label: string;
+      offset: string | null | undefined;
+      id: string;
     };
     const groupEntries: GroupEntry[] = [];
 
@@ -175,11 +207,14 @@ export class OscillatorHandle {
           indices.push(rawIdx);
         }
       }
-      if (indices.length > 0) {
+      // Price groups use OHLCV data directly — always include even with no active outputs.
+      if (indices.length > 0 || group.displayType === "Price") {
         groupEntries.push({
           displayType: group.displayType,
           outputIndices: indices,
           label: group.label,
+          offset: group.offset,
+          id: group.id,
         });
       }
     }
@@ -187,15 +222,20 @@ export class OscillatorHandle {
     // ── Step 4: create rendering targets ──────────────────────────────────────
     let firstIndicatorGroup = true;
 
-    for (const { displayType, outputIndices, label } of groupEntries) {
+    for (const {
+      displayType,
+      outputIndices,
+      label,
+      offset,
+      id,
+    } of groupEntries) {
       if (displayType === "Overlay") {
         // All outputs in this group overlay the price chart together.
         if (!sourceSeries) continue;
+        const offsetValue = resolveOffset(offset, info.options, optionValues);
         const overlayColors = outputIndices.map(
           (idx) => colorMap.get(idx) ?? SERIES_COLORS[0],
         );
-        const primitive = new DataOverlayPrimitive(overlayColors);
-        sourceSeries.attachPrimitive(primitive);
         // Register entries in the shared price-pane legend.
         const legendKey: object = {};
         const overlayLegendEntries: LegendEntry[] = outputIndices.map(
@@ -208,7 +248,71 @@ export class OscillatorHandle {
           }),
         );
         getPricePaneLegend(this._chart).add(legendKey, overlayLegendEntries);
-        this._overlayGroups.push({ outputIndices, primitive, legendKey });
+
+        if (offsetValue !== 0) {
+          // Time-offset overlay: use LineSeries on pane 0 so future timestamps
+          // extend the chart's time scale and render correctly.
+          const seriesList: ISeriesApi<"Line">[] = outputIndices.map((_, i) => {
+            const s = chart.addSeries(LineSeries, {
+              color: overlayColors[i],
+              lineWidth: lineWidth as 1 | 2 | 3 | 4,
+              priceLineVisible: false,
+              lastValueVisible: false,
+            }) as ISeriesApi<"Line">;
+            s.moveToPane(0);
+            return s;
+          });
+          // Optional fill between first and last series
+          const fillPrimitive =
+            this._fillBand && outputIndices.length >= 2
+              ? new FillBandPrimitive(overlayColors[0])
+              : null;
+          if (fillPrimitive) sourceSeries.attachPrimitive(fillPrimitive);
+          this._offsetOverlayGroups.push({
+            outputIndices,
+            offsetValue,
+            seriesList,
+            fillPrimitive,
+            legendKey,
+          });
+        } else {
+          // Standard (zero-offset) overlay: use DataOverlayPrimitive
+          const primitive = new DataOverlayPrimitive(overlayColors);
+          sourceSeries.attachPrimitive(primitive);
+          this._overlayGroups.push({
+            outputIndices,
+            offsetValue: 0,
+            primitive,
+            legendKey,
+          });
+        }
+      } else if (displayType === "Price") {
+        // Render a raw OHLCV price field (identified by group id) on the price chart.
+        if (!sourceSeries) continue;
+        const priceId = id.toLowerCase();
+        if (!(["open", "high", "low", "close"] as string[]).includes(priceId))
+          continue;
+        const priceField = priceId as "open" | "high" | "low" | "close";
+        // Determine colors: use output indices if available, else fall back to defaults.
+        const priceColors =
+          outputIndices.length > 0
+            ? outputIndices.map((idx) => colorMap.get(idx) ?? SERIES_COLORS[0])
+            : [SERIES_COLORS[0]];
+        const primitive = new DataOverlayPrimitive(priceColors);
+        sourceSeries.attachPrimitive(primitive);
+        // Resolve the time offset (typically negative for lagging spans).
+        const offsetValue = resolveOffset(offset, info.options, optionValues);
+        const legendKey: object = {};
+        const priceLegendEntries: LegendEntry[] = [
+          { name: label, color: priceColors[0] },
+        ];
+        getPricePaneLegend(this._chart).add(legendKey, priceLegendEntries);
+        this._priceGroups.push({
+          priceField,
+          offsetValue,
+          primitive,
+          legendKey,
+        });
       } else if (displayType === "Volume") {
         // All outputs in this group overlay the volume panel together.
         if (!volumeSeries) continue;
@@ -311,6 +415,20 @@ export class OscillatorHandle {
         this._sourceSeries.detachPrimitive(group.primitive);
         getPricePaneLegend(this._chart).remove(group.legendKey);
       }
+      for (const group of this._priceGroups) {
+        this._sourceSeries.detachPrimitive(group.primitive);
+        getPricePaneLegend(this._chart).remove(group.legendKey);
+      }
+    }
+    // Remove offset overlay series and fill primitives.
+    for (const group of this._offsetOverlayGroups) {
+      for (const s of group.seriesList) {
+        this._chart.removeSeries(s);
+      }
+      if (group.fillPrimitive && this._sourceSeries) {
+        this._sourceSeries.detachPrimitive(group.fillPrimitive);
+      }
+      getPricePaneLegend(this._chart).remove(group.legendKey);
     }
     // Detach volume-panel overlay primitives.
     if (this._volumeSeries) {
@@ -333,6 +451,15 @@ export class OscillatorHandle {
     this._data.push(bar);
 
     if (!this._state) {
+      this._computeFull();
+      return;
+    }
+
+    // Fall back to full recompute when any group uses a time-offset or price
+    // data (incremental batchIndicator can't handle shifted timestamps).
+    const hasOffsetGroups =
+      this._offsetOverlayGroups.length > 0 || this._priceGroups.length > 0;
+    if (hasOffsetGroups) {
       this._computeFull();
       return;
     }
@@ -370,6 +497,15 @@ export class OscillatorHandle {
       );
       group.primitive.appendPoint(bar.time, batchSlice);
     }
+
+    // Update price-panel overlay primitives (zero-offset price groups only;
+    // non-zero-offset price groups are handled by the full-recompute path above).
+    for (const group of this._priceGroups) {
+      if (group.offsetValue !== 0) continue;
+      group.primitive.appendPoint(bar.time, [
+        new Float64Array([bar[group.priceField]]),
+      ]);
+    }
   }
 
   // ── Internal ───────────────────────────────────────────────────────────────
@@ -403,12 +539,38 @@ export class OscillatorHandle {
       const lines = group.outputIndices.map((rawIdx) => {
         const out = rawOutputs[rawIdx] ?? new Float64Array(0);
         const lookback = this._data.length - out.length;
+        // offsetValue is always 0 for entries in _overlayGroups
         return [...out].map((value, j) => ({
           time: this._data[lookback + j].time,
           value,
         }));
       });
       group.primitive.setData(lines);
+    }
+
+    // ── Offset overlay groups: LineSeries on pane 0 with time-shifted data ───────
+    for (const group of this._offsetOverlayGroups) {
+      const lines = group.outputIndices.map((rawIdx) => {
+        const out = rawOutputs[rawIdx] ?? new Float64Array(0);
+        const lookback = this._data.length - out.length;
+        return buildOffsetSeries(this._data, out, lookback, group.offsetValue);
+      });
+      lines.forEach((lineData, pos) => {
+        group.seriesList[pos].setData(lineData);
+      });
+      if (group.fillPrimitive && lines.length >= 2) {
+        group.fillPrimitive.setData(lines[0], lines[lines.length - 1]);
+      }
+    }
+
+    // ── Price groups: render OHLCV price field with time shift ────────────────
+    for (const group of this._priceGroups) {
+      const line = buildPriceSeries(
+        this._data,
+        group.priceField,
+        group.offsetValue,
+      );
+      group.primitive.setData([line]);
     }
 
     // ── Volume groups: back-align and push to primitive ───────────────────────
