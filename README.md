@@ -1,5 +1,10 @@
 # tulip-rs-lwc
 
+[![npm version](https://img.shields.io/npm/v/tulip-rs-lwc.svg)](https://www.npmjs.com/package/tulip-rs-lwc)
+[![Downloads](https://img.shields.io/npm/dm/tulip-rs-lwc.svg)](https://www.npmjs.com/package/tulip-rs-lwc)
+[![License: MIT](https://img.shields.io/npm/l/tulip-rs-lwc.svg)](LICENSE)
+[![CI status](https://github.com/me60732/tulip-rs-lwc/actions/workflows/release.yml/badge.svg)](https://github.com/me60732/tulip-rs-lwc/actions/workflows/release.yml)
+
 [![npm](https://img.shields.io/npm/v/tulip-rs-lwc.svg)](https://www.npmjs.com/package/tulip-rs-lwc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-me60732.github.io-blue)](https://me60732.github.io/tulip-rs-lwc/)
